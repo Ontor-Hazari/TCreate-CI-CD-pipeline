@@ -32,6 +32,7 @@ jobs:
     - name: Install Playwright and run tests
       run: |
         sudo apt-get update  # Update package list to ensure dependencies are available
-        sudo apt-get install -y libnss3 libatk-bridge2.0-0 libatk1.0-0 libx11-xcb1 libxcomposite1 libxrandr2 libgbm1 libxss1 libcurl4 libdrm2  # Install necessary system dependencies for Playwright (without libasound2)
+        sudo apt-get install -y libnss3 libatk-bridge2.0-0 libatk1.0-0 libx11-xcb1 libxcomposite1 libxrandr2 libgbm1 libxss1 libcurl4 libdrm2  # Install necessary system dependencies for Playwright
         sudo npx playwright install --with-deps  # Install Playwright and its dependencies with sudo permissions
+        sudo chmod +x $(npm bin)/playwright  # Ensure the Playwright binary has execution permissions
         npm test  # Run your test script (assuming you have a "test" script in package.json)
