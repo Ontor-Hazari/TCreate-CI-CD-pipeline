@@ -13,28 +13,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v2
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # Set up Node.js environment
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'  # Use Node.js 20 LTS
+      # Set up Node.js (Use Node.js 20 LTS, as Node 22 is unsupported)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # Use Node.js 20 LTS
 
-    # Install dependencies
-    - name: Install dependencies
-      run: npm install
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
 
-    # Install Playwright Browsers
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      # Install Playwright Browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
-    # Set executable permissions for Playwright binary
-    - name: Fix Playwright Binary Permissions
-      run: chmod +x node_modules/.bin/playwright
+      # Set executable permissions for Playwright binary
+      - name: Fix Playwright Binary Permissions
+        run: chmod +x node_modules/.bin/playwright
 
-    # Run Playwright tests
-    - name: Run Playwright Tests
-      run: npm test
+      # Run Playwright tests
+      - name: Run Playwright Tests
+        run: npm test
