@@ -28,8 +28,10 @@ jobs:
       run: |
         npm install
 
-    # Run Playwright tests
-    - name: Run Playwright tests
+    # Install Playwright dependencies and run Playwright tests
+    - name: Install Playwright and run tests
       run: |
-        npx playwright install --with-deps  # Install Playwright dependencies, including browsers
+        sudo apt-get update  # Update package list to ensure dependencies are available
+        sudo apt-get install -y libnss3 libatk-bridge2.0-0 libatk1.0-0 libx11-xcb1 libxcomposite1 libxrandr2 libgbm1 libxss1 libasound2 libcurl4 libdrm2  # Install necessary system dependencies for Playwright
+        sudo npx playwright install --with-deps  # Install Playwright and its dependencies
         npm test  # Run your test script (assuming you have a "test" script in package.json)
