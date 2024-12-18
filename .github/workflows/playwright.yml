@@ -27,16 +27,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Grant permissions to all binaries in node_modules/.bin
+      - name: Fix Binary Permissions
+        run: chmod +x node_modules/.bin/*
+
       # Install Playwright Browsers
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Run Playwright tests and generate a summary
+      # Run Playwright tests
       - name: Run Playwright Tests
-        run: npx playwright test
-
-      # Display test summary from Playwright's built-in reporter
-      - name: Show Test Summary
-        run: |
-          echo "Test Summary:"
-          npx playwright show-report
+        run: npm test
