@@ -40,13 +40,16 @@ jobs:
         run: |
           npx playwright test --reporter=json > test-results.json
 
-      # Summarize Test Results
-      - name: Summarize Test Results
+      # Summarize Test Results and Write to Job Summary
+      - name: Generate Test Summary in Job UI
         run: |
           PASSED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "passed")] | length')
           FAILED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "failed")] | length')
           SKIPPED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "skipped")] | length')
 
-          echo "✅ Passed: $PASSED"
-          echo "❌ Failed: $FAILED"
-          echo "⏭ Skipped: $SKIPPED"
+          echo "### 🎉 Test Results Summary 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "| Status  | Count |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Passed | $PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ Failed | $FAILED |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⏭ Skipped | $SKIPPED |" >> $GITHUB_STEP_SUMMARY
