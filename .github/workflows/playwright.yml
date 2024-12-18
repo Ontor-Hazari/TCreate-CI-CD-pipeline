@@ -35,6 +35,30 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Run Playwright tests
+      # Run Playwright tests and output JSON results
       - name: Run Playwright Tests
-        run: npm test
+        run: npx playwright test --reporter=list,json > results.json
+
+      # Parse test results and display summary
+      - name: Display Test Results
+        run: |
+          node <<EOF
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
+          let total = 0, passed = 0, failed = 0, skipped = 0;
+
+          results.suites.forEach(suite => {
+            suite.tests.forEach(test => {
+              total++;
+              if (test.outcome === 'passed') passed++;
+              else if (test.outcome === 'failed') failed++;
+              else if (test.outcome === 'skipped') skipped++;
+            });
+          });
+
+          console.log('Test Summary:');
+          console.log(`Total: ${total}`);
+          console.log(`Passed: ${passed}`);
+          console.log(`Failed: ${failed}`);
+          console.log(`Skipped: ${skipped}`);
+          EOF
