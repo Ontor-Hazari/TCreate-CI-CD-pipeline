@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Grant permissions to all binaries in node_modules/.bin
+      # Fix Binary Permissions
       - name: Fix Binary Permissions
         run: chmod +x node_modules/.bin/*
 
@@ -35,6 +35,18 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Run Playwright tests
-      - name: Run Playwright Tests
-        run: npm test
+      # Run Playwright tests and generate output
+      - name: Run Playwright Tests with JSON report
+        run: |
+          npx playwright test --reporter=json > test-results.json
+
+      # Summarize Test Results
+      - name: Summarize Test Results
+        run: |
+          PASSED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "passed")] | length')
+          FAILED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "failed")] | length')
+          SKIPPED=$(cat test-results.json | jq '[.suites[].specs[] | select(.tests[].results[].status == "skipped")] | length')
+
+          echo "✅ Passed: $PASSED"
+          echo "❌ Failed: $FAILED"
+          echo "⏭ Skipped: $SKIPPED"
