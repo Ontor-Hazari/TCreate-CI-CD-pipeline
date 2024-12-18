@@ -27,38 +27,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Grant permissions to all binaries in node_modules/.bin
-      - name: Fix Binary Permissions
-        run: chmod +x node_modules/.bin/*
-
       # Install Playwright Browsers
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Run Playwright tests and output JSON results
+      # Run Playwright tests and generate a summary
       - name: Run Playwright Tests
-        run: npx playwright test --reporter=json > results.json
+        run: npx playwright test
 
-      # Parse test results and display summary
-      - name: Display Test Results
+      # Display test summary from Playwright's built-in reporter
+      - name: Show Test Summary
         run: |
-          node <<EOF
-          const fs = require('fs');
-          const results = JSON.parse(fs.readFileSync('results.json', 'utf8'));
-          let total = 0, passed = 0, failed = 0, skipped = 0;
-
-          results.suites.forEach(suite => {
-            suite.tests.forEach(test => {
-              total++;
-              if (test.outcome === 'expected') passed++;
-              else if (test.outcome === 'unexpected') failed++;
-              else if (test.outcome === 'skipped') skipped++;
-            });
-          });
-
-          console.log('Test Summary:');
-          console.log(`Total: ${total}`);
-          console.log(`Passed: ${passed}`);
-          console.log(`Failed: ${failed}`);
-          console.log(`Skipped: ${skipped}`);
-          EOF
+          echo "Test Summary:"
+          npx playwright show-report
