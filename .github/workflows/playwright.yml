@@ -37,7 +37,7 @@ jobs:
 
       # Run Playwright tests and output JSON results
       - name: Run Playwright Tests
-        run: npx playwright test --reporter=list,json > results.json
+        run: npx playwright test --reporter=json > results.json
 
       # Parse test results and display summary
       - name: Display Test Results
@@ -50,8 +50,8 @@ jobs:
           results.suites.forEach(suite => {
             suite.tests.forEach(test => {
               total++;
-              if (test.outcome === 'passed') passed++;
-              else if (test.outcome === 'failed') failed++;
+              if (test.outcome === 'expected') passed++;
+              else if (test.outcome === 'unexpected') failed++;
               else if (test.outcome === 'skipped') skipped++;
             });
           });
